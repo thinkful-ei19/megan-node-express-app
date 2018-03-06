@@ -1,0 +1,18 @@
+{
+  "name": "noteful-app",
+  "version": "0.0.1",
+  "description": "FullStack App w/ RESTful API Challenge",
+  "license": "MIT",
+  "author": "Chris Klanac",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cklanac/noteful-app.git"
+  },
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
