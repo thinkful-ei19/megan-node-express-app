@@ -14,9 +14,6 @@ const noteful = (function () {
     editForm.find('.js-note-content-entry').val(store.currentNote.content);
   }
 
-  /**
-   * GENERATE HTML FUNCTIONS
-   */
   function generateNotesList(list, currentNote) {
     const listItems = list.map(item => `
     <li data-id="${item.id}" class="js-note-element ${currentNote.id === item.id ? 'active' : ''}">
@@ -88,18 +85,23 @@ const noteful = (function () {
         }
         );}
       else {
-        console.log('Create Note, coming soon...');
-                
+        api.create(noteObj, updateResponse => {
+          store.currentNote = updateResponse;
+  
+          api.search(store.currentSearchTerm, updateResponse => {
+            store.notes = updateResponse;
+            render();
+          });
+        });       
       }
- 
     });
   }
 
   function handleNoteStartNewSubmit() {
     $('.js-start-new-note-form').on('submit', event => {
       event.preventDefault();
-
-      console.log('Start New Note, coming soon...');
+      store.currentNote = false;
+      render();
 
     });
   }
@@ -107,11 +109,26 @@ const noteful = (function () {
   function handleNoteDeleteClick() {
     $('.js-notes-list').on('click', '.js-note-delete-button', event => {
       event.preventDefault();
+      console.log('delete hit');
 
-      console.log('Delete Note, coming soon...');
+      const noteToDelete = getNoteIdFromElement(event.currentTarget);
+
       
+      api.remove(noteToDelete, ()=>{
+        api.search( store.currentSearchTerm, searchResponse =>{
+          store.notes=searchResponse;
+          if(noteToDelete===searchResponse.id){
+            console.log('from search');
+            store.currentNote = {};
+          }
+          console.log('rendering after search');
+          render();
+        }
+        );
+      });
     });
   }
+
 
   function bindEventListeners() {
     handleNoteItemClick();
