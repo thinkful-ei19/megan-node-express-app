@@ -86,7 +86,7 @@ router.post('/v1/notes', (req, res, next) => {
 
 router.delete('/api/notes/:id', (req, res, next) => {
   const id = req.params.id;
-  notes.delete(Number(id), function (err,item) {
+  notes.delete(id, function (err,item) {
     if(err){
       return next(err);
     }

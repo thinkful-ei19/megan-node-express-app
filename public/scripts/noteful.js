@@ -119,7 +119,7 @@ const noteful = (function () {
           store.notes=searchResponse;
           if(noteToDelete===searchResponse.id){
             console.log('from search');
-            store.currentNote = {};
+            store.currentNote = {};//what does store.currentNotes have in it?  It says false in store but must be something else
           }
           console.log('rendering after search');
           render();

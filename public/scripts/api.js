@@ -49,7 +49,6 @@ const api = {
     $.ajax({
       type: 'DELETE',
       url: `/api/notes/${id}`,
-      contentType: 'application/json',
       dataType: 'json',
       success: callback
     });
