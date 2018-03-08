@@ -102,11 +102,10 @@ const noteful = (function () {
           .then(resolveUpdate => {
             console.log(resolveUpdate);
             resolveUpdate;
-            return render();
+            render();
           }
           );}
       else {
-        setTimeout(function() { render(); }, 5000);
         api.create(noteObj)
           .then(updateResponse => {
             store.currentNote = updateResponse;
