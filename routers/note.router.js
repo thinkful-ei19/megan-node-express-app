@@ -12,28 +12,26 @@ const notes = simDB.initialize(data);
 router.get('/api/notes', (req, res, next) => {
   const { searchTerm } = req.query;
   
-  notes.filter(searchTerm, (err, list) => {
-    if (err) {
-      return next(err); // goes to error handler
-    }
-    res.json(list); // responds with filtered array
-  });
+  notes.filter(searchTerm)
+    .then((list) => {
+      res.json(list); // responds with filtered array
+    })
+    .catch(err => next(err));
 });
   
   
 router.get('/api/notes/:id', (req, res, next) => {
   const {id}= req.params;
    
-  notes.find(id, (err, item) => {
-    if (err) {
-      return next(err);
-    }
-    if (item) {
-      res.json(item);
-    } else {
-      next();
-    }
-  });
+  notes.find(id)
+    .then((item) => {
+      if (item) {
+        res.json(item);
+      } else {
+        next();
+      }
+    })
+    .catch(err => next(err));
 }); 
   
 router.put('/api/notes/:id', (req, res, next) => {
@@ -49,19 +47,18 @@ router.put('/api/notes/:id', (req, res, next) => {
     }
   });
   
-  notes.update(id, updateObj, (err, item) => {
-    if (err) {
-      return next(err);
-    }
-    if (item) {
-      res.json(item);
-    } else {
-      next();
-    }
-  });
+  notes.update(id, updateObj)///can you chain the 2nd one?
+    .then((item) => {
+      if (item) {
+        res.json(item);
+      } else {
+        next();
+      }
+    })
+    .catch(err => next(err));
 });
 
-router.post('/v1/notes', (req, res, next) => {
+router.post('/api/notes', (req, res, next) => {
   const { title, content } = req.body;
   
   const newItem = { title, content };
@@ -71,32 +68,30 @@ router.post('/v1/notes', (req, res, next) => {
     return next(err);
   }
   
-  notes.create(newItem, (err, item) => {
-    if (err) {
-      return next(err);
-    }
-    if (item) {
-      res.location(`http://${req.headers.host}/notes/${item.id}`).status(201).json(item);
-    } else {
-      next();
-    }
-  });
+  notes.create(newItem)
+    .then((item) => {
+      if (item) {
+        res.location(`http://${req.headers.host}/notes/${item.id}`).status(201).json(item);
+      } else {
+        next();
+      }
+    })
+    .catch(err => next(err));
 });
 
 
 router.delete('/api/notes/:id', (req, res, next) => {
   const id = req.params.id;
-  notes.delete(id, function (err,item) {
-    if(err){
-      return next(err);
-    }
-    if (item){
-      res.status(204).end();
-    }
-    else {
-      next();
-    }
-  });
+  notes.delete(id)
+    .then(function (item) {
+      if (item){
+        res.status(204).end();
+      }
+      else {
+        next();
+      }
+    })
+    .catch(err => next(err));
   console.log(`Deleting shopping list item \`${req.params.id}\``);
 });
 

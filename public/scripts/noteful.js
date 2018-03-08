@@ -40,10 +40,11 @@ const noteful = (function () {
 
       const noteId = getNoteIdFromElement(event.currentTarget);
 
-      api.details(noteId, detailsResponse => {
-        store.currentNote = detailsResponse;
-        render();
-      });
+      api.details(noteId)
+        .then(detailsResponse => {
+          store.currentNote = detailsResponse;
+          render();
+        });
 
     });
   }
@@ -55,10 +56,11 @@ const noteful = (function () {
       const searchTerm = $('.js-note-search-entry').val();
       store.currentSearchTerm = searchTerm ? { searchTerm } : {};
 
-      api.search(store.currentSearchTerm, searchResponse => {
-        store.notes = searchResponse;
-        render();
-      });
+      api.search(store.currentSearchTerm)
+        .then(searchResponse => {
+          store.notes = searchResponse;
+          render();
+        });
 
     });
   }
@@ -76,23 +78,27 @@ const noteful = (function () {
       };
 
       if (noteObj.id){
-        api.update(store.currentNote.id, noteObj, updateResponse => 
-          store.currentNote = updateResponse);
+        api.update(store.currentNote.id)
+          .then(noteObj, updateResponse => 
+            store.currentNote = updateResponse);
 
-        api.search(store.currentSearchTerm, searchResponse => {
-          store.notes = searchResponse;
-          render();
-        }
-        );}
-      else {
-        api.create(noteObj, updateResponse => {
-          store.currentNote = updateResponse;
-  
-          api.search(store.currentSearchTerm, updateResponse => {
-            store.notes = updateResponse;
+        api.search(store.currentSearchTerm)
+          .then(searchResponse => {
+            store.notes = searchResponse;
             render();
-          });
-        });       
+          }
+          );}
+      else {
+        api.create(noteObj)
+          .then(updateResponse => {
+            store.currentNote = updateResponse;
+  
+            api.search(store.currentSearchTerm)
+              .then(updateResponse => {
+                store.notes = updateResponse;
+                render();
+              });
+          });       
       }
     });
   }
@@ -112,20 +118,22 @@ const noteful = (function () {
       console.log('delete hit');
 
       const noteToDelete = getNoteIdFromElement(event.currentTarget);
-
+      console.log(noteToDelete);  
       
-      api.remove(noteToDelete, ()=>{
-        api.search( store.currentSearchTerm, searchResponse =>{
-          store.notes=searchResponse;
-          if(noteToDelete===searchResponse.id){
-            console.log('from search');
-            store.currentNote = {};//what does store.currentNotes have in it?  It says false in store but must be something else
-          }
-          console.log('rendering after search');
-          render();
-        }
-        );
-      });
+      api.remove(noteToDelete)
+        .then(() =>{
+          api.search(store.currentSearchTerm)
+            .then(searchResponse =>{
+              store.notes=searchResponse;
+              if(noteToDelete===searchResponse.id){
+                console.log('from search');
+                store.currentNote = {};
+              }
+              console.log('rendering after search');
+              render();
+            }
+            );
+        });
     });
   }
 
