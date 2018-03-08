@@ -77,28 +77,47 @@ const noteful = (function () {
         content: editForm.find('.js-note-content-entry').val()
       };
 
+      function search(){
+        console.log('apiSearch1 initiated');
+        return new Promise((resolve, reject) => {
+          console.log('new Promise initiated');
+          const apiSearch = api.search(store.currentSearchTerm);
+          console.log(apiSearch);
+          if(apiSearch){
+            console.log('apisearch initiated');
+            resolve(updateResponse => {
+              store.notes = updateResponse;});}
+          else{
+            reject('not working');
+          }
+        });
+      }
+
       if (noteObj.id){
         api.update(store.currentNote.id)
           .then(noteObj, updateResponse => 
             store.currentNote = updateResponse);
 
-        api.search(store.currentSearchTerm)
-          .then(searchResponse => {
-            store.notes = searchResponse;
-            render();
+        search()
+          .then(resolveUpdate => {
+            console.log(resolveUpdate);
+            resolveUpdate;
+            return render();
           }
           );}
       else {
+        setTimeout(function() { render(); }, 5000);
         api.create(noteObj)
           .then(updateResponse => {
             store.currentNote = updateResponse;
   
-            api.search(store.currentSearchTerm)
-              .then(updateResponse => {
-                store.notes = updateResponse;
-                render();
-              });
-          });       
+            search()
+              .then(resolve => {
+                console.log(resolve);
+                resolve;
+                render();    
+              }
+              );});   
       }
     });
   }
