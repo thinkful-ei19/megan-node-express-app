@@ -77,31 +77,24 @@ const noteful = (function () {
         content: editForm.find('.js-note-content-entry').val()
       };
 
-      if (noteObj.id){
-        api.update(store.currentNote.id, noteObj)
-          .then(updateResponse => {
-            store.currentNote = updateResponse;
+      let foo;
 
-            return api.search(store.currentSearchTerm);
-          })
-          .then(searchResponse => {
-            store.notes = searchResponse;
-            render();
-          }
-          );
+      if (noteObj.id){
+        foo = api.update(store.currentNote.id, noteObj);
       }
       else {
-        api.create(noteObj)
-          .then(updateResponse => {
-            store.currentNote = updateResponse;
-  
-            return api.search(store.currentSearchTerm);
-          })
-          .then(updateResponse => {
-            store.notes = updateResponse;
-            render();
-          });         
+        foo = api.create(noteObj);        
       }
+      foo.then(updateResponse => {
+        store.currentNote = updateResponse;
+
+        return api.search(store.currentSearchTerm);
+      })
+        .then(searchResponse => {
+          store.notes = searchResponse;
+          render();
+        }
+        );
     });
   }
 
