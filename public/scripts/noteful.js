@@ -78,27 +78,29 @@ const noteful = (function () {
       };
 
       if (noteObj.id){
-        api.update(store.currentNote.id)
-          .then(noteObj, updateResponse => 
-            store.currentNote = updateResponse);
+        api.update(store.currentNote.id, noteObj)
+          .then(updateResponse => {
+            store.currentNote = updateResponse;
 
-        api.search(store.currentSearchTerm)
+            return api.search(store.currentSearchTerm);
+          })
           .then(searchResponse => {
             store.notes = searchResponse;
             render();
           }
-          );}
+          );
+      }
       else {
         api.create(noteObj)
           .then(updateResponse => {
             store.currentNote = updateResponse;
   
-            api.search(store.currentSearchTerm)
-              .then(updateResponse => {
-                store.notes = updateResponse;
-                render();
-              });
-          });       
+            return api.search(store.currentSearchTerm);
+          })
+          .then(updateResponse => {
+            store.notes = updateResponse;
+            render();
+          });         
       }
     });
   }
