@@ -64,9 +64,9 @@ describe('post request test', function(){
   });
 });
 
-describe('404 handler for post', function () {
+describe('400 handler for post', function () {
   
-  const newNote = {'margs': '', 'content':'Oh Hi!'};
+  const newNote = {'title': '', 'content':'Oh Hi!'};
 
   it('should respond with 404 when given incorrect inputs', function () {
     return chai.request(app)
@@ -78,4 +78,67 @@ describe('404 handler for post', function () {
       });
   });
     
+});
+
+describe('put request test', function(){
+  
+  it('should update note by id', function(){
+
+    const updateNote = {'title': 'Kitty', 'content':'Oh Hi!'};
+    
+    return chai.request(app)
+      .get('/api/notes')
+      .then(function(res){
+        updateNote.id = res.body[0].id;
+        return chai.request(app)
+          .put(`/api/notes/${updateNote.id}`)
+          .send(updateNote);
+      })
+      .then(function(res){
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.deep.equal(updateNote);
+      });
+  });
+});
+
+describe('404 for bad out id path', function(){
+  it('should respond with 404 when given a bad path', function () {
+    const updateNote = {'title': 'Kitty', 'content':'Oh Hi!'};
+    return chai.request(app)
+      .put('/api/notes/badId')
+      .send(updateNote)
+      .catch(err => err.response)
+      .then(res => {
+        expect(res).to.have.status(404);
+      });
+  });
+      
+});
+
+describe('delete request test', function(){
+  it('should delete items when hitting x button', function(){
+    return chai.request(app)
+      .get('/api/notes')
+      .then(function(res){
+        return chai.request(app)
+          .delete(`/api/notes/${res.body[0].id}`);
+      })
+      .then(function(res){
+        expect(res).to.have.status(204);
+      }
+      );
+  });
+});
+
+describe('404 for bad delete id path', function(){
+  it('should respond with 404 when given a bad path', function () {
+    return chai.request(app)
+      .delete('/api/notes/badId')
+      .catch(err => err.response)
+      .then(res => {
+        expect(res).to.have.status(404);
+      });
+  });
 });

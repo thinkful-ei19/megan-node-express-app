@@ -1,7 +1,7 @@
 'use strict';
 
 // Simple In-Memory Database (async-callback version)
-const DELAY = 1000;
+const DELAY = 100;
 const { promisify } = require('util');
 
 const simDB = {
@@ -53,19 +53,18 @@ const simDB = {
   },
 
   update: function (id, updateItem, callback) {
-    setTimeout(() => {
-      try {
-        id = Number(id);
-        let item = this.data.find(item => item.id === id);
-        if (!item) {
-          return callback(null, null);
-        }
-        Object.assign(item, updateItem);
-        callback(null, item);
-      } catch (err) {
-        callback(err);
+    
+    try {
+      id = Number(id);
+      let item = this.data.find(item => item.id === id);
+      if (!item) {
+        return callback(null, null);
       }
-    }, DELAY); //why is this crashing my app?//
+      Object.assign(item, updateItem);
+      callback(null, item);
+    } catch (err) {
+      callback(err);
+    }
   },
 
   delete: function (id, callback) {
