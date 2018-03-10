@@ -1,2 +1,9 @@
 language: node_js
 node_js: node
+deploy:
+  provider: heroku
+  api_key:
+    secure: QFMMDHprkuJ6KcLHCSULKW07On5PJ7WnbE6M41n5dTiWcE8sbXIrhKZlGTBONjug7gTN9bVCKjrOQGL5OGbdT+wnNMhjaxsHtYKxjCASdbKUEAxfMZvo107VhmmIsRcWPWwBtyqN43n7mlsOIHcpBustiUWbs+2kp6BCukm7hWXKo7VR828sVgt7ZwrA4GKpV/JlyDL0IwQNAvaNzYnybVZUGVHuh75rJyZhtX0mPkcZy9l2kprblMLaBttfL4KKwBDt1LhVsg73r/UR2tkfC7yQ/wwNPFe0RzLYNEH7ghgmasGuE19Dk3x2nir5YmC2FlAhhf8/nPKDFkEb+5E1Nn58z1KavJPHVCVAMfA7EiZKd8hUT93ykLkcDAPAw6q6VjHkysnwKHRXpBiutokvZzqxs7dYahRvy0vDdHK4RnSuVFJHk/w7rIS/60Ppo9NgNDhMYKqOwkpWaBEIpUSe8SesaVHRjqyT0+tO2aykD07/Z2QRCvy7Ew/k//rC0/fGY9Mi0WMr9LpNO1xDC1FVpzusrHl/2cArUG2Pw0yWgYIc7LfYNFKsoMx6h0tVMKmM6Hh0U4KiaA349PzpwTcpRM++Uvi3rHNAjSZXgJI++hn0xz7waVAObYXmdavw2oNDdGU/zm1NxoGCtLcHbnY/HX3B3MbAMUsuuQEHVjhHk4I=
+  app: megan-node-express-app
+  on:
+    repo: thinkful-ei19/megan-node-express-app
